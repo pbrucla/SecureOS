@@ -1,16 +1,17 @@
 ASM=nasm
 DD=dd
 CFLAGS=-I.
-QEMU=qemu-system-x86_64
-LINKER=ld
+QEMU=qemu-system-i386
+LINKER=i686-elf-ld
 LINKER_FILE=linker.ld
+OBJCOPY=i686-elf-objcopy
 
 BUILD_DIR=build
 SRC_DIR=source
 KERNEL_DIR=$(SRC_DIR)/kernel
 BOOT_DIR=$(SRC_DIR)/boot
 
-GCC=gcc
+GCC=i686-elf-gcc
 GCC_FLAGS=-ffreestanding
 
 default: 
@@ -27,10 +28,10 @@ $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 
 kernel: $(OBJ_FILES) $(KERNEL_DIR)/kernel_entry.asm
-	$(ASM) $(KERNEL_DIR)/kernel_entry.asm -f elf64 -o $(BUILD_DIR)/kernel_entry.o
+	$(ASM) $(KERNEL_DIR)/kernel_entry.asm -f elf32 -o $(BUILD_DIR)/kernel_entry.o
 	$(LINKER) -o $(BUILD_DIR)/kernel.elf -Ttext 0x1000 -z noexecstack $(BUILD_DIR)/kernel_entry.o $(OBJ_FILES) 
-	objcopy --only-keep-debug $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.sym
-	objcopy -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
+	$(OBJCOPY) --only-keep-debug $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.sym
+	$(OBJCOPY) -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
 image: boot kernel
 	cat $(BUILD_DIR)/boot-sect.bin $(BUILD_DIR)/kernel.bin > $(BUILD_DIR)/os_image
