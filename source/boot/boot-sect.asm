@@ -8,6 +8,8 @@ KERNEL_OFFSET equ 0x1000 ;address to load kernel
     mov bx, MSG_REAL_MODE
     call print_string ;Print out MSG_REAL_MODE
 
+    call enable_a20
+    
     call load_kernel ; self explanatory
 
     call switch_to_pm ;Call of no return O_O
@@ -19,6 +21,14 @@ KERNEL_OFFSET equ 0x1000 ;address to load kernel
 %include "disk_load.asm"
 
 [bits 16]
+enable_a20:
+    cli                 ; Disable interrupts
+    xor ax, ax          ; Zero out AX register
+    in al, 0x92         ; Read System Control Port A
+    or al, 0x02         ; Set A20 bit
+    out 0x92, al        ; Write System Control Port A
+    sti                 ; Enable interrupts
+    ret
 load_kernel:
     mov bx, MSG_LOAD_KERNEL
     call print_string
