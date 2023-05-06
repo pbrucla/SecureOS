@@ -1,17 +1,18 @@
+PREFIX=i686-elf # Change this to your cross-compiler prefix (e.g. i686-elf for MacOS and i686-liunx-gnu for WSL & Linux)
 ASM=nasm
 DD=dd
 CFLAGS=-I.
 QEMU=qemu-system-i386
-LINKER=i686-elf-ld
+LINKER=$(PREFIX)-ld
 LINKER_FILE=linker.ld
-OBJCOPY=i686-elf-objcopy
+OBJCOPY=$(PREFIX)-objcopy
 
 BUILD_DIR=build
 SRC_DIR=source
 KERNEL_DIR=$(SRC_DIR)/kernel
 BOOT_DIR=$(SRC_DIR)/boot
 
-GCC=i686-elf-gcc
+GCC=$(PREFIX)-gcc
 GCC_FLAGS=-ffreestanding
 
 default: 
