@@ -1,4 +1,5 @@
-PREFIX=i686-elf # Change this to your cross-compiler prefix (e.g. i686-elf for MacOS and i686-liunx-gnu for WSL & Linux)
+# Change this to your cross-compiler prefix (e.g. i686-elf for MacOS and i686-linux-gnu for WSL & Linux)
+PREFIX=i686-linux-gnu
 ASM=nasm
 DD=dd
 CFLAGS=-I.
