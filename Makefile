@@ -13,10 +13,11 @@ SRC_DIR=source
 KERNEL_DIR=$(SRC_DIR)/kernel
 BOOT_DIR=$(SRC_DIR)/boot
 
-INCLUDE=$(SRC_DIR)/include
+INCLUDES=$(KERNEL_DIR)/include
+LIBC=$(SRC_DIR)/libc/include
 
 GCC=$(PREFIX)-gcc
-GCC_FLAGS=-ffreestanding -I$(INCLUDE)
+GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC)
 
 default: 
 	mkdir -p $(BUILD_DIR)

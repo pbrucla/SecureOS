@@ -32,3 +32,4 @@ void terminal_clear();
 void terminal_enable_cursor();
 void terminal_disable_cursor();
 void terminal_update_cursor();
+void terminal_move_cursor(uint8_t row, uint8_t col);

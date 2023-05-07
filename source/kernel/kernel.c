@@ -5,4 +5,5 @@ void main() {
     init_drivers();
     terminal_clear();
     terminal_putchar('X');
+    terminal_update_cursor();
 }
