@@ -1,11 +1,68 @@
+#include <stdint.h>
 #include "terminal_driver.h"
 
-uint16_t* current;
+uint8_t cursor_row;
+uint8_t cursor_col;
+uint16_t* vga_buffer;
+enum vga_color foreground;
+enum vga_color background;
 
-void terminal_driver_init() {
-  current = VGA_BASE;  
+static inline uint8_t vga_color_byte(enum vga_color fg, enum vga_color bg) {
+    return (bg << 4) | fg;
 }
 
-void print_char(char c) {
-  
+static inline uint16_t vga_entry(uint8_t c, uint8_t color) {
+    return (color << 8) | c;
+}
+
+void terminal_driver_init() {
+    //initialize global variables
+    cursor_row = 0;
+    cursor_col = 0;
+    vga_buffer = (uint16_t*) VGA_BASE;
+    foreground = VGA_COLOR_WHITE;
+    background = VGA_COLOR_BLACK;
+    //initialize settings
+    terminal_disable_cursor();
+}
+
+void terminal_putentryat(char c, enum vga_color fg, enum vga_color bg, uint8_t row, uint8_t col) {
+    int index = row*VGA_WIDTH + col;
+    vga_buffer[index] = vga_entry(c, vga_color_byte(fg, bg));
+}
+
+void terminal_putchar(char c) {
+    switch (c) {
+        case '\n':
+            cursor_row++;
+            cursor_col = 0;
+            break;
+        default:
+            terminal_putentryat(c, foreground, background, cursor_row, cursor_col);
+            break;
+    }
+
+    if (++cursor_col == VGA_WIDTH) {
+        cursor_col = 0;
+        if (++cursor_row == VGA_HEIGHT) {
+            cursor_row = 0;
+        }
+    }
+}
+
+void terminal_clear() {
+    const int VGA_SIZE = VGA_WIDTH*VGA_HEIGHT;
+    for (int i = 0; i < VGA_SIZE; i++) {
+        vga_buffer[i] = vga_entry('\0', vga_color_byte(foreground, background));
+    }
+}
+
+void terminal_enable_cursor() {
+}
+
+void terminal_disable_cursor() {
+}
+
+void terminal_update_cursor() {
+
 }

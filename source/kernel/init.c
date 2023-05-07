@@ -1,9 +1,6 @@
 #include "init.h"
+#include "terminal_driver.h"
 
-void init() {
-
-}
-
-void initDrivers() {
-  
+void init_drivers() {
+  terminal_driver_init();
 }

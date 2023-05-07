@@ -2,10 +2,9 @@
 #include <stdint.h>
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
+#define VGA_BASE 0xb8000;
 
-const uint16_t* VGA_BASE = (uint16_t*) 0xb8000;
-
-const enum vga_color {
+enum vga_color {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
 	VGA_COLOR_GREEN = 2,
@@ -23,6 +22,13 @@ const enum vga_color {
 	VGA_COLOR_LIGHT_BROWN = 14,
 	VGA_COLOR_WHITE = 15,
 };
-
+//initialize global variables
 void terminal_driver_init();
-void print_char(char c);
+//manipulate char buffer
+void terminal_putentryat(char c, enum vga_color fg, enum vga_color bg, uint8_t row, uint8_t col);
+void terminal_putchar(char c);
+void terminal_clear();
+//cursor
+void terminal_enable_cursor();
+void terminal_disable_cursor();
+void terminal_update_cursor();

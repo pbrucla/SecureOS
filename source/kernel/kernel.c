@@ -1,9 +1,8 @@
 #include <stdint.h>
-#include "global.h"
-uint16_t* current;
+#include "init.h"
+#include "terminal_driver.h"
 void main() {
-    current = (uint16_t*) 0xb8000;
-    for (int i = 0; i < 5; i++) {
-        current[i] = 0x0f58;
-    }
+    init_drivers();
+    terminal_clear();
+    terminal_putchar('X');
 }
