@@ -44,5 +44,8 @@ image: boot kernel
 run: default
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
+dockerun:
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
+
 clean: 
 	rm -rf $(BUILD_DIR)
