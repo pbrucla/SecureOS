@@ -1,0 +1,11 @@
+services:
+  compiler:
+    build:
+      context:
+        ./
+      dockerfile:
+        ./Dockerfile
+    stdin_open: true
+    working_dir: /app
+    volumes:
+      - ./:/app
