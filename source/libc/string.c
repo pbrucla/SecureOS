@@ -30,7 +30,19 @@ void* memset(void* s, int c, size_t n) {
     }
     return s;
 }
-int memcmp(const void* s1, const void* s2, size_t n);
+int memcmp(const void* s1, const void* s2, size_t n) {
+    char* s1_ptr = (char*) s1;
+    char* s2_ptr = (char*) s2;
+    size_t i = 0;
+    for (;i < n; i++) {
+        if (s1_ptr[i] != s2_ptr[i]) {
+            break;
+        }
+    }
+    if (i == n)
+        return 0;
+    return ((s1_ptr[i] > s2_ptr[i]) ? 1 : -1);
+}
 size_t strlen(const char* s);
 char* strcpy(char* dest, const char* src);
 char* strncpy(char* dest, const char* src, size_t n);
