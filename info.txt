@@ -1,0 +1,10 @@
+Freestanding mode allowed headers:
+<float.h>
+<iso646.h>
+<limits.h>
+<stdarg.h>
+<stdbool.h>
+<stddef.h>
+<stdint.h>
+
+Including additional headers will cause the build to fail for other cross compilers.

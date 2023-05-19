@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include "init.h"
 #include "terminal_driver.h"
+#include "string.h"
+
 void main() {
     init_drivers();
     terminal_clear();

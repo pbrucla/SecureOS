@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <sys/io.h>
+#include "io.h"
 #include "terminal_driver.h"
 
 uint8_t cursor_row;
