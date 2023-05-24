@@ -114,3 +114,5 @@ char* strrchr(const string* s, int c) {
     }
     return NULL;
 }
+
+// string initstring(const char* s);
