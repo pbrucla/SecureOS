@@ -12,12 +12,14 @@ BUILD_DIR=build
 SRC_DIR=source
 KERNEL_DIR=$(SRC_DIR)/kernel
 BOOT_DIR=$(SRC_DIR)/boot
+LIBC_DIR=$(SRC_DIR)/libc
 
 INCLUDES=$(KERNEL_DIR)/include
-LIBC=$(SRC_DIR)/libc/include
+LIBC=$(LIBC_DIR)/include
 
 GCC=$(PREFIX)-gcc
 GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC)
+FORMAT=clang-format -i
 
 default: 
 	mkdir -p $(BUILD_DIR)
@@ -26,9 +28,13 @@ default:
 boot: $(BOOT_DIR)/*.asm
 	$(ASM) $(BOOT_DIR)/boot-sect.asm -i $(BOOT_DIR) -f bin -o $(BUILD_DIR)/boot-sect.bin
 
-SRC_FILES=$(wildcard $(KERNEL_DIR)/*.c)
-OBJ_FILES=$(patsubst $(KERNEL_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
+KERNEL_SRC=$(wildcard $(KERNEL_DIR)/*.c)
+LIBC_SRC=$(wildcard $(LIBC_DIR)/*.c)
+OBJ_FILES=$(patsubst $(LIBC_DIR)/%.c,$(BUILD_DIR)/%.o, $(LIBC_SRC)) \
+		  $(patsubst $(KERNEL_DIR)/%.c,$(BUILD_DIR)/%.o, $(KERNEL_SRC))
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
+	$(GCC) $(GCC_FLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(LIBC_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 
 kernel: $(OBJ_FILES) $(KERNEL_DIR)/kernel_entry.asm
@@ -47,5 +53,11 @@ run: default
 dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
+format:
+	find source -type f -name '*.c' -or -name '*.h' -or -name '*.asm' | xargs dos2unix
+	find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT)
+
 clean: 
 	rm -rf $(BUILD_DIR)
+
+.PHONY: clean format dockerun run image kernel boot default

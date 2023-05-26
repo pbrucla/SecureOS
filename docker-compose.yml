@@ -6,7 +6,6 @@ services:
       dockerfile:
         ./Dockerfile
     stdin_open: true
-    restart: always
     working_dir: /app
     volumes:
       - ./:/app
