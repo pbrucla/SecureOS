@@ -59,3 +59,5 @@ format:
 
 clean: 
 	rm -rf $(BUILD_DIR)
+
+.PHONY: clean format dockerun run image kernel boot default
