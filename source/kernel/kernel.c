@@ -1,9 +1,10 @@
-#include <stdint.h>
 #include "init.h"
-#include "terminal_driver.h"
 #include "string.h"
+#include "terminal_driver.h"
+#include <stdint.h>
 
-void main() {
+void main()
+{
     init_drivers();
     terminal_clear();
     terminal_putchar('X');
