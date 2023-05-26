@@ -19,7 +19,7 @@ LIBC=$(LIBC_DIR)/include
 
 GCC=$(PREFIX)-gcc
 GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC)
-FORMAT=clang-format -i --style="{BasedOnStyle: llvm, IndentWidth: 4, BreakBeforeBraces: Linux, IndentCaseLabels: false}"
+FORMAT=clang-format -i
 
 default: 
 	mkdir -p $(BUILD_DIR)
@@ -54,8 +54,8 @@ dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 format:
-	find source/ -type f -name *.c | xargs ${FORMAT}
-	find source/ -type f -name *.h | xargs ${FORMAT}
+	find source -type f -name '*.c' -or -name '*.h' | xargs dos2unix
+	find source/ -type f -name '*.c' -or -name '*.h' | xargs ${FORMAT}
 
 clean: 
 	rm -rf $(BUILD_DIR)
