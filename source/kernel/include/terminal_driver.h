@@ -27,6 +27,7 @@ void terminal_driver_init();
 //manipulate char buffer
 void terminal_putentryat(char c, enum vga_color fg, enum vga_color bg, uint8_t row, uint8_t col);
 void terminal_putchar(char c);
+void terminal_put64(unsigned long long n);
 void terminal_clear();
 //cursor
 void terminal_enable_cursor();

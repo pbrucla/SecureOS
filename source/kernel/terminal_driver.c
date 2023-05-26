@@ -51,6 +51,17 @@ void terminal_putchar(char c) {
     }
 }
 
+void terminal_put64(unsigned long long n){
+    char temp;
+    for (int i = 1; i<=16; i++){
+        temp = n>>(64-i*4);
+        temp &= 0xF;
+        if (temp < 10) temp += '0';
+        else temp += 'A' - 10;
+        terminal_putchar(temp);
+    }
+}
+
 void terminal_clear() {
     const int VGA_SIZE = VGA_WIDTH*VGA_HEIGHT;
     for (int i = 0; i < VGA_SIZE; i++) {
