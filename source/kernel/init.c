@@ -4,3 +4,7 @@
 void init_drivers() {
   terminal_driver_init();
 }
+
+void init_kernel_stack() {
+  
+}
