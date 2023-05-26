@@ -54,8 +54,10 @@ dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 format:
-	find source -type f -name '*.c' -or -name '*.h' | xargs dos2unix
+	find source -type f -name '*.c' -or -name '*.h' -or -name '*.asm' | xargs dos2unix
 	find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT)
 
 clean: 
 	rm -rf $(BUILD_DIR)
+
+.PHONY: clean format dockerun run image kernel boot default
