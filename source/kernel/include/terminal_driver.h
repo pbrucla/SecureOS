@@ -2,7 +2,7 @@
 #include <stdint.h>
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
-#define VGA_BASE 0xb8000;
+#define VGA_BASE 0x800b8000;
 
 enum vga_color {
     VGA_COLOR_BLACK = 0,

@@ -28,18 +28,19 @@ default:
 boot: $(BOOT_DIR)/*.asm
 	$(ASM) $(BOOT_DIR)/boot-sect.asm -i $(BOOT_DIR) -f bin -o $(BUILD_DIR)/boot-sect.bin
 
-KERNEL_SRC=$(wildcard $(KERNEL_DIR)/*.c)
 LIBC_SRC=$(wildcard $(LIBC_DIR)/*.c)
-OBJ_FILES=$(patsubst $(LIBC_DIR)/%.c,$(BUILD_DIR)/%.o, $(LIBC_SRC)) \
-		  $(patsubst $(KERNEL_DIR)/%.c,$(BUILD_DIR)/%.o, $(KERNEL_SRC))
+OBJ_FILES=$(patsubst $(LIBC_DIR)/%.c,$(BUILD_DIR)/%.o,$(LIBC_SRC)) \
+		  $(patsubst $(KERNEL_DIR)/%.c,$(BUILD_DIR)/%.o,$(wildcard $(KERNEL_DIR)/*.c)) \
+		  $(patsubst $(KERNEL_DIR)/%.asm,$(BUILD_DIR)/%.o,$(wildcard $(KERNEL_DIR)/*.asm))
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.asm
+	$(ASM) $< -f elf32 -o $@
 $(BUILD_DIR)/%.o: $(LIBC_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 
-kernel: $(OBJ_FILES) $(KERNEL_DIR)/kernel_entry.asm
-	$(ASM) $(KERNEL_DIR)/kernel_entry.asm -f elf32 -o $(BUILD_DIR)/kernel_entry.o
-	$(LINKER) -o $(BUILD_DIR)/kernel.elf -Ttext 0x1000 -z noexecstack $(BUILD_DIR)/kernel_entry.o $(OBJ_FILES) 
+kernel: $(OBJ_FILES)
+	$(LINKER) -o $(BUILD_DIR)/kernel.elf -Ttext 0x80001000 -z noexecstack $(BUILD_DIR)/kernel_entry.o $(OBJ_FILES) 
 	$(OBJCOPY) --only-keep-debug $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.sym
 	$(OBJCOPY) -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 

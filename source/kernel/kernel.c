@@ -1,4 +1,5 @@
 #include "init.h"
+#include "memory.h"
 #include "timer.h"
 #include "io.h"
 #include "string.h"
@@ -7,6 +8,7 @@
 
 void main()
 {
+    init_paging();
     init_drivers();
     terminal_clear();
     unsigned long long cur_time = get_cpu_time();
