@@ -12,8 +12,11 @@ mov cr4, eax
 
 ; identity map [0, 4MiB)
 mov dword [L2_PAGE_BASE], MEGAPAGE_FLAGS
-; map higher half megapage to same address
-mov dword [L2_PAGE_BASE + (1 << 9) * 4], MEGAPAGE_FLAGS
+; map 32 MiB of higher half virtual addresses to physical addresses
+mov edi, L2_PAGE_BASE + (1 << 9) * 4
+mov eax, MEGAPAGE_FLAGS
+mov ecx, 8
+rep stosd
 ; enable paging
 mov eax, L2_PAGE_BASE
 mov cr3, eax

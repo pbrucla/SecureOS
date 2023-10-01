@@ -1,21 +1,75 @@
-; load DH sectors to ES:BX from drive DL
-disk_load:
-    push dx ;define head, cylinder, and sector to load
-    mov ah, 0x02
-    mov al, dh ;number of sectors
-    mov ch, 0x00
-    mov dh, 0x00
-    mov cl, 0x02
-    int 0x13
-    jc disk_error ;check CPU flag for disk error
-    pop dx
-    cmp dh, al
-    jne disk_error
+; hard disk operations using ATA PIO to read the disk image
+; docs: https://wiki.osdev.org/ATA_PIO_Mode
+
+; poll until the hard drive is ready
+pio_poll:
+    ; read PIO status register
+    mov dx, 0x1f7
+    in al, dx
+    ; wait for busy bit to clear
+    test al, 1 << 7
+    jnz pio_poll
+    ; check for an error
+    test al, 1
+    jnz disk_error
+    ; wait for ready bit to set
+    test al, 1 << 6
+    jz pio_poll
     ret
 
 disk_error:
-    mov bx, DISK_ERROR_MSG
-    call print_string
+    mov dx, 0x1f1
+    in al, dx
+    mov ebx, DISK_ERROR_MSG
+    call print_string_pm
     jmp $
 
+; read one sector into memory at address edi from offset esi
+pio_read_sector:
+    call pio_poll
+    mov dx, 0x1f2
+    ; 1 sector
+    mov al, 1
+    out dx, al
+    inc edx
+    ; lower byte address
+    mov eax, esi
+    out dx, al
+    inc edx
+    ; 2nd byte address
+    shr eax, 8
+    out dx, al
+    inc edx
+    ; 3rd byte address
+    shr eax, 8
+    out dx, al
+    inc edx
+    ; 4th byte address
+    shr eax, 8
+    or eax, 0b11100000 | (BOOT_DRIVE << 4) ; enable LBA and select drive 0 or 1
+    out dx, al
+    inc edx
+    ; issue sector read command
+    mov al, 0x20
+    out dx, al
+    call pio_poll
+    mov dx, 0x1f0
+    mov ecx, 0x80 ; sectors are 0x200 bytes or 0x80 dwords long
+    rep insd
+    ret
+
+; read esi sectors into memory starting from sector 1 to address edi
+disk_load:
+    mov ecx, esi
+    mov esi, 1
+    .loop:
+        push ecx
+        call pio_read_sector
+        inc esi
+        pop ecx
+        loop .loop
+    ret
+    
+
 DISK_ERROR_MSG db "Disk read error!",0
+WOOT db "woot",0
