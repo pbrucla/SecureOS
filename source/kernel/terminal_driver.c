@@ -46,14 +46,14 @@ void terminal_putchar(char c)
         break;
     default:
         terminal_putentryat(c, foreground, background, cursor_row, cursor_col);
+        if (++cursor_col == VGA_WIDTH) {
+            cursor_col = 0;
+            cursor_row++;
+        }
         break;
     }
-
-    if (++cursor_col == VGA_WIDTH) {
-        cursor_col = 0;
-        if (++cursor_row == VGA_HEIGHT) {
-            cursor_row = 0;
-        }
+    if (cursor_row == VGA_HEIGHT) {
+        cursor_row = 0;
     }
 }
 

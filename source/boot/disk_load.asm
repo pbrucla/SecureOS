@@ -11,18 +11,28 @@ pio_poll:
     jnz pio_poll
     ; check for an error
     test al, 1
-    jnz disk_error
+    jnz .disk_error
     ; wait for ready bit to set
     test al, 1 << 6
     jz pio_poll
+
+    xor eax, eax
     ret
 
-disk_error:
+    .disk_error:
     mov dx, 0x1f1
     in al, dx
+    cmp al, 4
+    je .fin
+    add al, 0x30
     mov ebx, DISK_ERROR_MSG
+    mov [ebx], al
     call print_string_pm
     jmp $
+
+    .fin:
+    mov eax, 1
+    ret
 
 ; read one sector into memory at address edi from offset esi
 pio_read_sector:
@@ -53,9 +63,13 @@ pio_read_sector:
     mov al, 0x20
     out dx, al
     call pio_poll
+    test eax, eax
+    jnz .stop
     mov dx, 0x1f0
     mov ecx, 0x80 ; sectors are 0x200 bytes or 0x80 dwords long
     rep insd
+    xor eax, eax
+    .stop:
     ret
 
 ; read esi sectors into memory starting from sector 1 to address edi
@@ -65,11 +79,14 @@ disk_load:
     .loop:
         push ecx
         call pio_read_sector
+        test eax, eax
+        jnz .stop
         inc esi
         pop ecx
         loop .loop
+    .stop
     ret
     
 
-DISK_ERROR_MSG db "Disk read error!",0
+DISK_ERROR_MSG db "? - Disk read error!",0
 WOOT db "woot",0

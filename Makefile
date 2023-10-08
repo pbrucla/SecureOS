@@ -2,7 +2,7 @@
 PREFIX=i686-linux-gnu
 ASM=nasm
 DD=dd
-CFLAGS=-I.
+CFLAGS=-I. -O2
 QEMU=qemu-system-i386
 LINKER=$(PREFIX)-ld
 LINKER_FILE=linker.ld
