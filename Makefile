@@ -40,7 +40,7 @@ $(BUILD_DIR)/%.o: $(LIBC_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 
 kernel: $(OBJ_FILES)
-	$(LINKER) -o $(BUILD_DIR)/kernel.elf -Ttext 0x80100000 -z noexecstack $(BUILD_DIR)/kernel_entry.o $(OBJ_FILES) 
+	$(LINKER) -T $(LINKER_FILE) -o $(BUILD_DIR)/kernel.elf -Ttext 0x80100000 -z noexecstack $(BUILD_DIR)/kernel_entry.o $(OBJ_FILES) 
 	$(OBJCOPY) --only-keep-debug $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.sym
 	$(OBJCOPY) -O binary $(BUILD_DIR)/kernel.elf $(BUILD_DIR)/kernel.bin
 
