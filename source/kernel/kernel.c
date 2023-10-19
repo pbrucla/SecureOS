@@ -9,9 +9,8 @@
 
 void main()
 {
-    init_paging();
     init_idt();
-    __asm__ volatile ("sti");
+    init_paging();
     init_drivers();
     terminal_clear();
     unsigned long long cur_time = get_cpu_time();
