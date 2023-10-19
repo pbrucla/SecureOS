@@ -1,6 +1,7 @@
 #include "init.h"
 #include "memory.h"
 #include "timer.h"
+#include "idt.h"
 #include "io.h"
 #include "string.h"
 #include "terminal_driver.h"
@@ -9,6 +10,8 @@
 void main()
 {
     init_paging();
+    init_idt();
+    __asm__ volatile ("sti");
     init_drivers();
     terminal_clear();
     unsigned long long cur_time = get_cpu_time();
