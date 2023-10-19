@@ -24,6 +24,7 @@ enum vga_color {
 };
 // initialize global variables
 void terminal_driver_init();
+uint8_t terminal_driver_loaded();
 // manipulate char buffer
 void terminal_putentryat(char c, enum vga_color fg, enum vga_color bg,
                          uint8_t row, uint8_t col);

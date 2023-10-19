@@ -8,6 +8,8 @@ uint16_t *vga_buffer = (uint16_t*) VGA_BASE;
 enum vga_color foreground = VGA_COLOR_WHITE;
 enum vga_color background = VGA_COLOR_BLACK;
 
+static uint8_t has_initialized = 0;
+
 static inline uint8_t vga_color_byte(enum vga_color fg, enum vga_color bg)
 {
     return (bg << 4) | fg;
@@ -18,8 +20,14 @@ static inline uint16_t vga_entry(uint8_t c, uint8_t color)
     return (color << 8) | c;
 }
 
+uint8_t terminal_driver_loaded(void)
+{
+    return has_initialized;
+}
+
 void terminal_driver_init()
 {
+    has_initialized = 1;
     // initialize settings
     terminal_enable_cursor();
 }

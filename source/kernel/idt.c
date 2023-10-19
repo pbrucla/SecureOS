@@ -4,6 +4,8 @@
 
 #define NUM_IDTS 256
 
+
+
 // idt table, this is the table where we put le interrupt
 __attribute__((aligned(0x10))) 
 static idt_entry_t idt[NUM_IDTS];
@@ -11,28 +13,24 @@ static idt_entry_t idt[NUM_IDTS];
 // define the idtr
 static idtr_t idtr;
 
-static int8_t has_triggered = 0;
+static uint64_t has_triggered = 0;
 
-void actual_handler(void)
+// we no-inline because I don't want it inlined :lemonthink:
+// also i want the actual isr to only have save register, call, then iret
+__attribute__((noinline))
+static void actual_exception_handler(void)
 {
-    if (!has_triggered) {
+    if (terminal_driver_loaded() && !has_triggered) {
         has_triggered = 1;
-         terminal_putchar('i');
-    //     terminal_putchar('\n');
-    //     has_triggered = 1;
+        terminal_putchar('\n');
     }
 }
 
-// __attribute__((noreturn))
-// void exception_handler(void);
-extern void exception_handler() {
-    actual_handler();
-    // if (!has_triggered) {
-        // terminal_putchar('i');
-        // terminal_putchar('\n');
-        // has_triggered = 1;
-    // }
-    __asm__ volatile ("iret;");
+// we put the actual handler in a different function because
+// we want to clean up the stack before we iret
+__attribute__((interrupt))
+static void exception_handler(registers_t *frame) {
+    actual_exception_handler();
 }
 
 void init_idt(void)
@@ -42,8 +40,6 @@ void init_idt(void)
     uint16_t upper = (handler_ptr >> 16) & 0xFFFF;
     for (int i = 0; i < NUM_IDTS; ++i) {
         idt[i].isr_low = lower;
-        // idt[i].kernel_cs = 0x08048000;
-        // idt[i].kernel_cs = 0xde;
         idt[i].kernel_cs = 0x8;
         idt[i].reserved = 0;
         idt[i].attributes = 0x8E;
@@ -53,16 +49,6 @@ void init_idt(void)
     idtr.base = (uint32_t) &idt[0];
     idtr.limit = (uint16_t) sizeof(idt_entry_t) * NUM_IDTS - 1;
 
-    // terminal_put64(&idt[0]);
-    // terminal_putchar('\n');
-    // terminal_put64(lower);
-    // terminal_putchar('\n');
-    // terminal_put64(upper);
-    // terminal_putchar('\n');
-    // terminal_putchar('\n');
-
-    // __asm__ volatile ("cli");
     __asm__ volatile ("lidt %0" : : "m"(idtr));
     __asm__ volatile ("sti");
-
 }
