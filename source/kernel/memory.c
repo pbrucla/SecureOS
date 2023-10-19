@@ -22,7 +22,7 @@ void flush_tlb() {
 // creates a page table if necessary with the page_flags given
 // returns NULL if the page is present and is part of a 4 MiB megapage
 uint32_t* get_page_table_entry(void* ptr, uint32_t page_flags) {
-    uint32_t addr = (uint32_t) ptr;
+    uint32_t addr = ((uint32_t) ptr) & ~PAGE_MASK;
     uint32_t l2_index = addr >> 22;
     uint32_t l2_entry = l2_page_table[l2_index];
     uint32_t* l1_page_table;
