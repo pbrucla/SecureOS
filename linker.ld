@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("elf32-i386", "elf32-i386",
               "elf32-i386")
-ENTRY(main)
+ENTRY(kernel_entry)
 SECTIONS
 {
   PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x08048000)); . = SEGMENT_START("text-segment", 0x08048000) + SIZEOF_HEADERS;
@@ -47,6 +47,7 @@ SECTIONS
 .plt.sec        : { *(.plt.sec) }
   .text           :
   {
+    *(.text.head)
     *(.text.unlikely .text.*_unlikely .text.unlikely.*)
     *(.text.exit .text.exit.*)
     *(.text.startup .text.startup.*)
