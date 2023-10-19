@@ -48,7 +48,9 @@ or eax, 1 << 31
 mov cr0, eax
 ; initialize stack
 mov esp, (1 << 31) + (1 << 22)
+mov eax, call_main
+jmp eax
 
-mov eax, main
-call eax
+call_main:
+call main
 jmp $

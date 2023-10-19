@@ -13,7 +13,7 @@
 #define PAGE_GLOBAL (1 << 8)
 
 #define L1_PAGE_TABLE_BASE (1 << 22)
-#define PAGE_MASK 0x3ff
+#define PAGE_MASK 0xfff
 
 void init_paging();
 uint32_t* get_page_table_entry(void* ptr, uint32_t page_flags);
