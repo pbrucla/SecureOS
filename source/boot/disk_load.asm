@@ -79,10 +79,10 @@ disk_load:
     .loop:
         push ecx
         call pio_read_sector
+        pop ecx
         test eax, eax
         jnz .stop
         inc esi
-        pop ecx
         loop .loop
     .stop
     ret

@@ -2,11 +2,11 @@
 #include "io.h"
 #include <stdint.h>
 
-uint8_t cursor_row;
-uint8_t cursor_col;
-uint16_t *vga_buffer;
-enum vga_color foreground;
-enum vga_color background;
+uint8_t cursor_row = 0;
+uint8_t cursor_col = 0;
+uint16_t *vga_buffer = (uint16_t*) VGA_BASE;
+enum vga_color foreground = VGA_COLOR_WHITE;
+enum vga_color background = VGA_COLOR_BLACK;
 
 static inline uint8_t vga_color_byte(enum vga_color fg, enum vga_color bg)
 {
@@ -20,12 +20,6 @@ static inline uint16_t vga_entry(uint8_t c, uint8_t color)
 
 void terminal_driver_init()
 {
-    // initialize global variables
-    cursor_row = 0;
-    cursor_col = 0;
-    vga_buffer = (uint16_t *)VGA_BASE;
-    foreground = VGA_COLOR_WHITE;
-    background = VGA_COLOR_BLACK;
     // initialize settings
     terminal_enable_cursor();
 }

@@ -32,9 +32,9 @@ load_kernel:
     mov ebx, MSG_LOAD_KERNEL
     call print_string_pm
 
-    ; load 32 sectors from disk into the kernel offset
+    ; load 64 sectors from disk into the kernel offset
     mov edi, KERNEL_OFFSET
-    mov esi, 32
+    mov esi, 64
     call disk_load
 
     ret

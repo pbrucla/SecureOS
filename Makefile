@@ -2,7 +2,6 @@
 PREFIX=i686-linux-gnu
 ASM=nasm
 DD=dd
-CFLAGS=-I. -O2
 QEMU=qemu-system-i386
 LINKER=$(PREFIX)-ld
 LINKER_FILE=linker.ld
@@ -18,7 +17,7 @@ INCLUDES=$(KERNEL_DIR)/include
 LIBC=$(LIBC_DIR)/include
 
 GCC=$(PREFIX)-gcc
-GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC)
+GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC) -O2
 FORMAT=clang-format -i
 
 default: 
