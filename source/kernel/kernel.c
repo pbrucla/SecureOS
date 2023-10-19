@@ -4,12 +4,10 @@
 #include "io.h"
 #include "string.h"
 #include "terminal_driver.h"
-#include "idt.h"
 #include <stdint.h>
 
 void main()
 {
-    idt_init();
     init_paging();
     init_drivers();
     terminal_clear();

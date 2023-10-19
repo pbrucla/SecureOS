@@ -52,7 +52,7 @@ BEGIN_PM:
 BOOT_DRIVE equ 0
 MSG_REAL_MODE db " Started in 16 - bit Real Mode " , 0
 MSG_PROT_MODE db " Successfully landed in 32 - bit Protected Mode " , 0
-MSG_LOAD_KERNEL db " Loading kernel into memory at KERNEL_OFFSET   ", 0
+MSG_LOAD_KERNEL db " Loading kernel into memory at KERNEL_OFFSET ", 0
 
 ;pad boot sector harder than my resume
 times 510-($-$$) db 0
