@@ -5,6 +5,7 @@
 #include "string.h"
 #include "terminal_driver.h"
 #include "timer.h"
+#include "pic.h"
 #include <stdint.h>
 
 void main()

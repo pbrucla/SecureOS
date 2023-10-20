@@ -13,10 +13,16 @@ void outb(unsigned char value, unsigned short port)
     __asm__ volatile("outb %0, %1" : : "a"(value), "Nd"(port));
 }
 
-int printf(const string *s)
+void io_wait()
 {
-    for (int i = 0; i < s->len; i++) {
-        terminal_putchar(s->data[i]);
+    outb(0, 0x80);
+}
+
+int printf(const char* s)
+{
+    for (int i = 0; s[i] != '\0'; i++) {
+        terminal_putchar(s[i]);
     }
     terminal_update_cursor();
 }
+
