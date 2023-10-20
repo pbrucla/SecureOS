@@ -1,5 +1,5 @@
-#include "io.h"
 #include "idt.h"
+#include "io.h"
 #include "terminal_driver.h"
 #include <stdint.h>
 
@@ -46,7 +46,7 @@ __attribute__((interrupt)) static void irq1Handler(registers_t *frame)
 
 void init_idt(void)
 {
-    uint32_t handler_ptr = (uint32_t) &exception_handler;
+    uint32_t handler_ptr = (uint32_t)&exception_handler;
     uint16_t lower = handler_ptr & 0xFFFF;
     uint16_t upper = (handler_ptr >> 16) & 0xFFFF;
     for (int i = 0; i < NUM_IDTS; ++i) {
@@ -57,8 +57,8 @@ void init_idt(void)
         idt[i].isr_high = upper;
     }
 
-    //remove later
-    handler_ptr = (uint32_t) &irq1Handler;
+    // remove later
+    handler_ptr = (uint32_t)&irq1Handler;
     lower = handler_ptr & 0xFFFF;
     upper = (handler_ptr >> 16) & 0xFFFF;
     idt[1].isr_low = lower;
@@ -66,7 +66,7 @@ void init_idt(void)
     idt[1].reserved = 0;
     idt[1].attributes = 0x8E;
     idt[1].isr_high = upper;
-    //end remove
+    // end remove
 
     idtr.base = (uint32_t)&idt[0];
     idtr.limit = (uint16_t)sizeof(idt_entry_t) * NUM_IDTS - 1;
