@@ -4,7 +4,7 @@
 
 uint8_t cursor_row = 0;
 uint8_t cursor_col = 0;
-uint16_t *vga_buffer = (uint16_t*) VGA_BASE;
+uint16_t *vga_buffer = (uint16_t *)VGA_BASE;
 enum vga_color foreground = VGA_COLOR_WHITE;
 enum vga_color background = VGA_COLOR_BLACK;
 
@@ -20,10 +20,7 @@ static inline uint16_t vga_entry(uint8_t c, uint8_t color)
     return (color << 8) | c;
 }
 
-uint8_t terminal_driver_loaded(void)
-{
-    return has_initialized;
-}
+uint8_t terminal_driver_loaded(void) { return has_initialized; }
 
 void terminal_driver_init()
 {
@@ -59,19 +56,23 @@ void terminal_putchar(char c)
     }
 }
 
-void terminal_put64(unsigned long long n){
+void terminal_put64(unsigned long long n)
+{
     char temp;
-    for (int i = 1; i<=16; i++){
-        temp = n>>(64-i*4);
+    for (int i = 1; i <= 16; i++) {
+        temp = n >> (64 - i * 4);
         temp &= 0xF;
-        if (temp < 10) temp += '0';
-        else temp += 'A' - 10;
+        if (temp < 10)
+            temp += '0';
+        else
+            temp += 'A' - 10;
         terminal_putchar(temp);
     }
 }
 
-void terminal_clear() {
-    const int VGA_SIZE = VGA_WIDTH*VGA_HEIGHT;
+void terminal_clear()
+{
+    const int VGA_SIZE = VGA_WIDTH * VGA_HEIGHT;
     for (int i = 0; i < VGA_SIZE; i++) {
         vga_buffer[i] = vga_entry('\0', vga_color_byte(foreground, background));
     }

@@ -16,9 +16,8 @@
 #define PAGE_MASK 0xfff
 
 void init_paging();
-uint32_t* get_page_table_entry(void* ptr, uint32_t page_flags);
-uint32_t palloc(void* va, uint32_t page_flags);
-void pfree(void* ptr);
-void* kalloc(size_t size);
-void kfree(void* ptr);
-
+uint32_t *get_page_table_entry(void *ptr, uint32_t page_flags);
+uint32_t palloc(void *va, uint32_t page_flags);
+void pfree(void *ptr);
+void *kalloc(size_t size);
+void kfree(void *ptr);

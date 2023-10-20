@@ -4,6 +4,14 @@ Much sekure.
 
 ## Usage
 
+## Development
+
+Please format the code before pushing
+
+```bash
+make format # format the code
+```
+
 ### Docker
 
 ```bash

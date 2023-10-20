@@ -1,10 +1,10 @@
-#include "init.h"
-#include "memory.h"
-#include "timer.h"
 #include "idt.h"
+#include "init.h"
 #include "io.h"
+#include "memory.h"
 #include "string.h"
 #include "terminal_driver.h"
+#include "timer.h"
 #include <stdint.h>
 
 void main()
@@ -18,7 +18,8 @@ void main()
     terminal_put64(cur_time);
     terminal_update_cursor();
     // string s;
-    // s.data = "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
+    // s.data =
+    // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
     //          "LLOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
     // s.len = 96;
     // printf(&s);
