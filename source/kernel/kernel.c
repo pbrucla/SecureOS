@@ -1,6 +1,7 @@
 #include "init.h"
 #include "memory.h"
 #include "timer.h"
+#include "idt.h"
 #include "io.h"
 #include "string.h"
 #include "terminal_driver.h"
@@ -8,6 +9,7 @@
 
 void main()
 {
+    init_idt();
     init_paging();
     init_drivers();
     terminal_clear();
@@ -24,14 +26,12 @@ void main()
     // palloc(wow, PAGE_PRESENT | PAGE_RW);
     // *wow = 0x42042069;
     // terminal_put64(*wow);
-    for (int i = 0; i < 25; i ++) {
-        uint32_t* smol = kalloc(200);
-        *smol = 0x12345678;
-        terminal_put64(smol);
-        terminal_putchar(' ');
-        terminal_put64(*smol);
-        terminal_putchar(' ');
-        terminal_put64(*get_page_table_entry((void*) smol, NULL));
-        terminal_putchar('\n');
-    }
+    // for (int i = 0; i < 30; i ++) {
+    //     uint32_t* smol = kalloc(200);
+    //     *smol = 0x12345678;
+    //     terminal_put64(smol);
+    //     terminal_putchar(' ');
+    //     terminal_put64(*smol);
+    //     terminal_putchar('\n');
+    // }
 }

@@ -17,7 +17,8 @@ INCLUDES=$(KERNEL_DIR)/include
 LIBC=$(LIBC_DIR)/include
 
 GCC=$(PREFIX)-gcc
-GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC) -O2
+# -mgeneral-regs-only needed for using attribute((interrupt)) for isr
+GCC_FLAGS=-ffreestanding -I$(INCLUDES) -I$(LIBC) -O2 -mgeneral-regs-only
 FORMAT=clang-format -i
 
 default: 
