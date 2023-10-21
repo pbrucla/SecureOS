@@ -9,13 +9,11 @@
 
 void main()
 {
-    init_idt();
-    init_paging();
     init_drivers();
     terminal_clear();
-    unsigned long long cur_time = get_cpu_time();
-    terminal_putchar('X');
-    terminal_put64(cur_time);
+    init_idt();
+    asm volatile ("int $0x3");
+    init_paging();
     terminal_update_cursor();
     // string s;
     // s.data =
