@@ -34,4 +34,4 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
-void isr_handler(registers_t frame);
+void isr_handler(registers_t* frame);
