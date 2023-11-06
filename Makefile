@@ -54,6 +54,10 @@ run: default
 dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
+check:
+	@grep -RE "\r" source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
+	@find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT) --dry-run --Werror
+
 format:
 	find source -type f -name '*.c' -or -name '*.h' -or -name '*.asm' | xargs dos2unix
 	find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT)
