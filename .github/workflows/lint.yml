@@ -7,9 +7,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
+    # Fixes: https://github.com/actions/checkout/issues/135
+    - name: Set git to use LF.
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
     - uses: actions/checkout@v3
     - name: Install dependencies.
       run: sudo apt-get install -y clang-format

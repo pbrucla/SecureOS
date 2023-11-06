@@ -55,13 +55,12 @@ dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 check:
-	# For some reason, GitHub Actions seems to add carriage returns?
-	# @grep -RE "\r" source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
-	find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT) --dry-run --Werror
+	@grep -RE $$'\r' source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
+	@find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT) --dry-run --Werror && echo "All files are formatted correctly." || echo "Some files are not formatted correctly. Please run 'make format' to fix them."
 
 format:
-	find source -type f -name '*.c' -or -name '*.h' -or -name '*.asm' | xargs dos2unix
-	find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT)
+	@find source -type f -name '*.c' -or -name '*.h' -or -name '*.asm' | xargs dos2unix > /dev/null 2>&1 && echo "Converted carriage returns to line feeds."
+	@find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT) && echo "Formatted all files."
 
 clean: 
 	rm -rf $(BUILD_DIR)
