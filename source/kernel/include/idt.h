@@ -26,3 +26,4 @@ typedef struct {
 } registers_t;
 
 void init_idt(void);
+uint32_t get_hits(void);

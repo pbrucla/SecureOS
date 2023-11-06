@@ -13,6 +13,11 @@ void outb(unsigned char value, unsigned short port)
     __asm__ volatile("outb %0, %1" : : "a"(value), "Nd"(port));
 }
 
+void outbb(unsigned short port, unsigned char value)
+{
+    __asm__ volatile("outb %0, %1" : : "a"(value), "Nd"(port));
+}
+
 void io_wait() { outb(0, 0x80); }
 
 int printf(const char *s)

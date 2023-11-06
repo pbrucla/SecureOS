@@ -18,6 +18,7 @@ void main()
     terminal_putchar('X');
     terminal_put64(cur_time);
     terminal_update_cursor();
+    terminal_put64(get_hits());
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
