@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     # Fixes: https://github.com/actions/checkout/issues/135
