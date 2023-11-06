@@ -55,7 +55,7 @@ dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 check:
-	@grep -RE "\r" source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
+	@grep -RE "$'\r'" source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
 	@find source/ -type f -name '*.c' -or -name '*.h' | xargs $(FORMAT) --dry-run --Werror && echo "All files are formatted correctly." || echo "Some files are not formatted correctly. Please run 'make format' to fix them."
 
 format:
