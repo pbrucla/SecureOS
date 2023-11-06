@@ -12,7 +12,7 @@ void main()
     init_drivers();
     terminal_clear();
     init_idt();
-    asm volatile ("int $0x3");
+    asm volatile("int $0x3");
     init_paging();
     terminal_update_cursor();
     // string s;

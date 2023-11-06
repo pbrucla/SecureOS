@@ -4,11 +4,11 @@
 /**
  * Interrupt Descriptor Table: table of 256 pointers to interrupt handlers
  * 0-31: Reserved, CPU uses to signal to kernel
- * 
-*/
+ *
+ */
 
-#define IDT_CODE_SEL 0x8 //kernel code selector
-#define IDT_ATTR 0x8E //idt_entry attribute field
+#define IDT_CODE_SEL 0x8 // kernel code selector
+#define IDT_ATTR 0x8E    // idt_entry attribute field
 
 typedef struct {
     uint16_t isr_low;   // The lower 16 bits of the ISR's address
