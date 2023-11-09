@@ -13,6 +13,12 @@ enum COM_PORT {
     COM8 = 0x4E8
 };
 
-int init_serial();
-void write_uart(COM_PORT port, const string* s);
-int read_uart(COM_PORT port, string *dest);
+/**
+ * Return 1 if init is succesful
+ * Return 0 otherwise
+ */
+int serial_driver_init();
+void write_serial(COM_PORT port, const string* s);
+
+/* TODO implement this */
+int read_serial(COM_PORT port, string *dest);
