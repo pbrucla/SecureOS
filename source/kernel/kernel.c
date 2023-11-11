@@ -2,7 +2,6 @@
 #include "init.h"
 #include "io.h"
 #include "memory.h"
-#include "pic.h"
 #include "string.h"
 #include "terminal_driver.h"
 #include "timer.h"
@@ -10,15 +9,11 @@
 
 void main()
 {
-    init_idt();
-    init_paging();
     init_drivers();
     terminal_clear();
-    unsigned long long cur_time = get_cpu_time();
-    terminal_putchar('X');
-    terminal_put64(cur_time);
     terminal_update_cursor();
-    terminal_put64(get_hits());
+    init_idt();
+    // init_paging();
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
