@@ -53,29 +53,8 @@ ISR_NOERRCODE 30
 ISR_NOERRCODE 31
 
 [EXTERN isr_handler]
-
+%include "int_stack_frame.asm"
 isr_common_stub:
-  pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-
-  mov ax, ds               ; Lower 16-bits of eax = ds.
-  push eax                 ; save the data segment descriptor
-
-  mov ax, 0x10  ; load the kernel data segment descriptor
-  mov ds, ax
-  mov es, ax
-  mov fs, ax
-  mov gs, ax
-  push esp
+  STUB_FRAME_PUSH
   call isr_handler
-  pop eax
-
-  pop eax        ; reload the original data segment descriptor
-  mov ds, ax
-  mov es, ax
-  mov fs, ax
-  mov gs, ax
-
-  popa                     ; Pops edi,esi,ebp...
-  add esp, 8     ; Cleans up the pushed error code and pushed ISR number
-  sti
-  iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+  STUB_FRAME_POP

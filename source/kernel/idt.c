@@ -32,20 +32,6 @@ __attribute__((noinline)) static void actual_exception_handler(void)
     oopsie_woopsie++;
 }
 
-// we put the actual handler in a different function because
-// we want to clean up the stack before we iret
-// idt_handler_t interrupt_handler(registers_t* frame)
-// {
-//     terminal_putchar(frame->int_no + '0');
-//     terminal_putchar('\n');
-// }
-// interrupts {8, 10-14} push error codes on stack
-// Note: tested it. Doesn't fucking work. Ima strangle Richard Stallman.
-// idt_handler_t exception_handler(registers_t* frame, uint32_t error_code) {
-//     printf("error code pushed");
-//     terminal_putchar('\n');
-// }
-
 // this currently will triple-fault on pressing a keyboard 
 __attribute__((noinline)) static void actualirq1Handler(void)
 {
