@@ -37,3 +37,8 @@ int printf(const char *s, ...)
     }
     terminal_update_cursor();
 }
+
+int printch(char c) {
+    terminal_putchar(c);
+    terminal_update_cursor();
+}

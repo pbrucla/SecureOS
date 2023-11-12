@@ -43,6 +43,15 @@ void terminal_putchar(char c)
         cursor_row++;
         cursor_col = 0;
         break;
+    case '\b':
+        if (cursor_col) {
+            cursor_col--;
+            terminal_putentryat('\0', foreground, background, cursor_row, cursor_col);
+        } else if (cursor_row) {
+            cursor_row--;
+            cursor_col = VGA_WIDTH-1;
+        }
+        break;
     default:
         terminal_putentryat(c, foreground, background, cursor_row, cursor_col);
         if (++cursor_col == VGA_WIDTH) {

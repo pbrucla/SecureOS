@@ -2,6 +2,7 @@
 #include "idt.h"
 #include "io.h"
 #include "terminal_driver.h"
+#include "keyboard_driver.h"
 
 isr_t interrupt_handlers[256];
 
@@ -29,10 +30,6 @@ void overflow(registers_t* frame) {
     printf("overflow trap\n");
 }
 
-void keyboard(registers_t* frame) {
-    printf("%x\n", inb(0x60));
-}
-
 void init_isr() {
     for (int i = 0; i < 256; i++)
         interrupt_handlers[i] = 0;
@@ -43,7 +40,10 @@ void init_isr() {
     register_interrupt_handler(4, &overflow);
 
     //irq handlers
-    register_interrupt_handler(33, &keyboard);
+    register_interrupt_handler(33, &keyboard_irq);
+
+    //handler initializations
+    keyboard_init();
 }
 
 void isr_handler(registers_t* frame)
