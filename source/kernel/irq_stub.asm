@@ -1,4 +1,4 @@
-
+; This is a macro that does remapping from irq to isr number
 %macro IRQ 2
   [GLOBAL irq%1]
   irq%1:
@@ -25,9 +25,9 @@ IRQ 13, 45
 IRQ 14, 46
 IRQ 15, 47
 
-[EXTERN isr_handler]
+[EXTERN irq_handler]
 %include "int_stack_frame.asm"
 irq_common_stub:
   STUB_FRAME_PUSH
-  call isr_handler
+  call irq_handler
   STUB_FRAME_POP

@@ -13,6 +13,8 @@ void main()
     terminal_clear();
     terminal_update_cursor();
     init_idt();
+    asm volatile("int $0x3");
+    asm volatile("int $0x4");
     // init_paging();
     // string s;
     // s.data =
