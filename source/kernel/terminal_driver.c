@@ -53,6 +53,7 @@ void terminal_putchar(char c)
     }
     if (cursor_row == VGA_HEIGHT) {
         cursor_row = 0;
+        terminal_clear();
     }
 }
 
