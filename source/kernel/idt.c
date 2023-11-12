@@ -1,6 +1,5 @@
 #include "idt.h"
 #include "io.h"
-#include "irq.h"
 #include "isr.h"
 #include "terminal_driver.h"
 #include <stdint.h>

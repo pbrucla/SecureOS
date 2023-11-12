@@ -16,40 +16,40 @@ void keyboard_irq(registers_t *frame)
         // TODO
         break;
     case ONE_PRESSED:
-        output = '1';
+        output = (SHIFT_PRESSED) ? '!' : '1';
         break;
     case TWO_PRESSED:
-        output = '2';
+        output = (SHIFT_PRESSED) ? '@' : '2';
         break;
     case THREE_PRESSED:
-        output = '3';
+        output = (SHIFT_PRESSED) ? '#' : '3';
         break;
     case FOUR_PRESSED:
-        output = '4';
+        output = (SHIFT_PRESSED) ? '$' : '4';
         break;
     case FIVE_PRESSED:
-        output = '5';
+        output = (SHIFT_PRESSED) ? '%' : '5';
         break;
     case SIX_PRESSED:
-        output = '6';
+        output = (SHIFT_PRESSED) ? '^' : '6';
         break;
     case SEVEN_PRESSED:
-        output = '7';
+        output = (SHIFT_PRESSED) ? '&' : '7';
         break;
     case EIGHT_PRESSED:
-        output = '8';
+        output = (SHIFT_PRESSED) ? '*' : '8';
         break;
     case NINE_PRESSED:
-        output = '9';
+        output = (SHIFT_PRESSED) ? '(' : '9';
         break;
     case ZERO_PRESSED:
-        output = '0';
+        output = (SHIFT_PRESSED) ? ')' : '0';
         break;
     case MINUS_PRESSED:
-        output = '-';
+        output = (SHIFT_PRESSED) ? '_' : '-';
         break;
     case EQUALS_PRESSED:
-        output = '=';
+        output = (SHIFT_PRESSED) ? '+' : '=';
         break;
     case BACKSPACE_PRESSED:
         output = '\b';
@@ -87,10 +87,10 @@ void keyboard_irq(registers_t *frame)
         output = 'p';
         break;
     case LEFT_BRACKET_PRESSED:
-        output = '[';
+        output = (SHIFT_PRESSED) ? '{' : '[';
         break;
     case RIGHT_BRACKET_PRESSED:
-        output = ']';
+        output = (SHIFT_PRESSED) ? '}' : ']';
         break;
     case ENTER_PRESSED:
         output = '\n';
@@ -126,10 +126,10 @@ void keyboard_irq(registers_t *frame)
         output = 'l';
         break;
     case SEMICOLON_PRESSED:
-        output = ';';
+        output = (SHIFT_PRESSED) ? ':' : ';';
         break;
     case SINGLE_QUOTE_PRESSED:
-        output = '\'';
+        output = (SHIFT_PRESSED) ? '"' : '\'';
         break;
     case BACK_TICK_PRESSED:
         output = '`';
@@ -138,7 +138,7 @@ void keyboard_irq(registers_t *frame)
         SHIFT_PRESSED = true;
         break;
     case BACKSLASH_PRESSED:
-        output = '\\';
+        output = (SHIFT_PRESSED) ? '|' : '\\';
         break;
     case Z_PRESSED:
         output = 'z';
@@ -162,13 +162,13 @@ void keyboard_irq(registers_t *frame)
         output = 'm';
         break;
     case COMMA_PRESSED:
-        output = ',';
+        output = (SHIFT_PRESSED) ? '<' : ',';
         break;
     case PERIOD_PRESSED:
-        output = '.';
+        output = (SHIFT_PRESSED) ? '>' : '.';
         break;
     case SLASH_PRESSED:
-        output = '/';
+        output = (SHIFT_PRESSED) ? '?' : '/';
         break;
     case RIGHT_SHIFT_PRESSED:
         SHIFT_PRESSED = true;
