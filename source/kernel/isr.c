@@ -3,42 +3,69 @@
 #include "io.h"
 #include "terminal_driver.h"
 
+isr_t interrupt_handlers[256];
+
+void register_interrupt_handler(uint8_t int_no, isr_t handler) {
+    interrupt_handlers[int_no] = handler;
+}
+
+void zero_exception(registers_t* frame) {
+    printf("divide by 0\n");
+}
+
+void single_step(registers_t* frame) {
+    printf("single step\n");
+}
+
+void nmi(registers_t* frame) {
+    printf("nmi\n");
+}
+
+void breakpoint(registers_t* frame) {
+    printf("breakpoint\n");
+}
+
+void overflow(registers_t* frame) {
+    printf("overflow trap\n");
+}
+
+void keyboard(registers_t* frame) {
+    printf("%x\n", inb(0x60));
+}
+
+void init_isr() {
+    for (int i = 0; i < 256; i++)
+        interrupt_handlers[i] = 0;
+    register_interrupt_handler(0, &zero_exception);
+    register_interrupt_handler(1, &single_step);
+    register_interrupt_handler(2, &nmi);
+    register_interrupt_handler(3, &breakpoint);
+    register_interrupt_handler(4, &overflow);
+
+    //irq handlers
+    register_interrupt_handler(33, &keyboard);
+}
+
 void isr_handler(registers_t* frame)
 {
     uint32_t int_no = frame->int_no;
-    switch (int_no) {
-        case 0:
-            printf("Divide by 0");
-            break;
-        case 1:
-            printf("Single Step");
-            break;
-        case 2:
-            printf("NMI");
-            break;
-        case 3:
-            printf("Breakpoint");
-            break;
-        case 4:
-            printf("Overflow Trap");
-            break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-            printf("General Protection Exception: ");
-            break;
-        case 14:
-        case 15:
-        case 16:
+    if (interrupt_handlers[int_no] != 0) {
+        isr_t handler = interrupt_handlers[int_no];
+        handler(frame);
     }
-    printf("isr_handler() ");
-    terminal_put64(frame->int_no);
-    terminal_putchar('\n');
-    terminal_update_cursor();
+}
+
+void irq_handler(registers_t* frame) {
+    uint32_t int_no = frame->int_no;
+    uint32_t irq_no = int_no - IRQ_OFFSET;
+    if (irq_no >= 8) {
+        //reset slave
+        outbb(0xA0, 0x20);
+    }
+    //reset master
+    outbb(0x20, 0x20);
+    if (interrupt_handlers[int_no] != 0) {
+        isr_t handler = interrupt_handlers[int_no];
+        handler(frame);
+    }
 }

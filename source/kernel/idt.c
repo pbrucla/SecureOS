@@ -172,6 +172,9 @@ void init_idt(void)
     idt_set_entry(45, (uint32_t)irq13, IDT_CODE_SEL, IDT_ATTR);
     idt_set_entry(46, (uint32_t)irq14, IDT_CODE_SEL, IDT_ATTR);
     idt_set_entry(47, (uint32_t)irq15, IDT_CODE_SEL, IDT_ATTR);
+
+    init_isr();
+    
     idt_flush(idtr);
 }
 
