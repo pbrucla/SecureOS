@@ -46,10 +46,11 @@ void terminal_putchar(char c)
     case '\b':
         if (cursor_col) {
             cursor_col--;
-            terminal_putentryat('\0', foreground, background, cursor_row, cursor_col);
+            terminal_putentryat('\0', foreground, background, cursor_row,
+                                cursor_col);
         } else if (cursor_row) {
             cursor_row--;
-            cursor_col = VGA_WIDTH-1;
+            cursor_col = VGA_WIDTH - 1;
         }
         break;
     default:

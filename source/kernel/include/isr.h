@@ -52,10 +52,10 @@ extern void irq13();
 extern void irq14();
 extern void irq15();
 
-void isr_handler(registers_t* frame);
-void irq_handler(registers_t* frame);
+void isr_handler(registers_t *frame);
+void irq_handler(registers_t *frame);
 
-typedef void (*isr_t)(registers_t*);
+typedef void (*isr_t)(registers_t *);
 void register_interrupt_handler(uint8_t int_no, isr_t handler);
 
 void init_isr();

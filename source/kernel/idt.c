@@ -1,8 +1,8 @@
 #include "idt.h"
+#include "io.h"
 #include "irq.h"
 #include "isr.h"
 #include "terminal_driver.h"
-#include "io.h"
 #include <stdint.h>
 
 #define NUM_IDTS 256
@@ -33,10 +33,11 @@ __attribute__((noinline)) static void actual_exception_handler(void)
     oopsie_woopsie++;
 }
 
-// this currently will triple-fault on pressing a keyboard 
+// this currently will triple-fault on pressing a keyboard
 __attribute__((noinline)) static void actualirq1Handler(void)
 {
-    // seems to triple fault before reaching here, idk pls can we get serial driver
+    // seems to triple fault before reaching here, idk pls can we get serial
+    // driver
     hits++;
     if (terminal_driver_loaded() && !has_triggered) {
         terminal_putchar('U');
@@ -67,11 +68,9 @@ void idt_set_entry(int idx, uint32_t handler_ptr, uint16_t code_selector,
 void setup_pic(void)
 {
     // for some context:
-    // PIC1 is the "master" PIC which can cascade signals to PIC2 via interrupt 2
-    // port 0x20 -> PIC1 command
-    // port 0x21 -> PIC1 data
-    // port 0xa0 -> PIC2 command
-    // port 0xa1 -> PIC2 data
+    // PIC1 is the "master" PIC which can cascade signals to PIC2 via interrupt
+    // 2 port 0x20 -> PIC1 command port 0x21 -> PIC1 data port 0xa0 -> PIC2
+    // command port 0xa1 -> PIC2 data
 
     // data ports will have the irq masks when read
     // note that the 8-bit mask has bit set to 1 for disabled interrupts
@@ -105,9 +104,9 @@ void setup_pic(void)
     io_wait();
 
     // restore previous irq masks (0xb8 for PIC1 and 0x8e for PIC2)
-    // for now, i only want 1 interrupt (the keyboard interrupt) so i will mask off
-    // everything else
-    // keyboard interrupt is the 1 << 1, cascade to PIC2 signal is the 1 << 2
+    // for now, i only want 1 interrupt (the keyboard interrupt) so i will mask
+    // off everything else keyboard interrupt is the 1 << 1, cascade to PIC2
+    // signal is the 1 << 2
     //
     // remember that ^ toggles bits, so bits 1 and 2 will be toggled to 0
     // (which will enable them in hw)
@@ -174,7 +173,6 @@ void init_idt(void)
     idt_set_entry(47, (uint32_t)irq15, IDT_CODE_SEL, IDT_ATTR);
 
     init_isr();
-    
+
     idt_flush(idtr);
 }
-

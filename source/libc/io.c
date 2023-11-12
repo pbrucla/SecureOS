@@ -27,10 +27,10 @@ int printf(const char *s, ...)
     va_start(args, s);
     for (int i = 0; s[i] != '\0'; i++) {
         if (s[i] == '%') {
-            switch(s[++i]) {
-                case 'x':
-                    terminal_put64(va_arg(args, int));
-                    break;
+            switch (s[++i]) {
+            case 'x':
+                terminal_put64(va_arg(args, int));
+                break;
             }
         } else
             terminal_putchar(s[i]);
@@ -38,7 +38,8 @@ int printf(const char *s, ...)
     terminal_update_cursor();
 }
 
-int printch(char c) {
+int printch(char c)
+{
     terminal_putchar(c);
     terminal_update_cursor();
 }
