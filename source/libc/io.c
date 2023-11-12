@@ -1,6 +1,7 @@
 #include "io.h"
 #include "string.h"
 #include "terminal_driver.h"
+#include <stdarg.h>
 
 unsigned char inb(unsigned short port)
 {
@@ -20,10 +21,19 @@ void outbb(unsigned short port, unsigned char value)
 
 void io_wait() { outb(0, 0x80); }
 
-int printf(const char *s)
+int printf(const char *s, ...)
 {
+    va_list args;
+    va_start(args, s);
     for (int i = 0; s[i] != '\0'; i++) {
-        terminal_putchar(s[i]);
+        if (s[i] == '%') {
+            switch(s[++i]) {
+                case 'x':
+                    terminal_put64(va_arg(args, int));
+                    break;
+            }
+        } else
+            terminal_putchar(s[i]);
     }
     terminal_update_cursor();
 }
