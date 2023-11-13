@@ -22,3 +22,10 @@ int printf(const char *s)
     }
     terminal_update_cursor();
 }
+void unitTest(const int errorNum,const char* errorMessage, const int bool){
+    terminal_put64(errorNum);
+    terminal_putchar(':');
+    terminal_putchar(' ');
+    printf(errorMessage);
+    if(bool==1)  asm("hlt");
+}
