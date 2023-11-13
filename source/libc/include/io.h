@@ -6,3 +6,4 @@ void outb(unsigned char value, unsigned short port);
 void io_wait();
 // printf attached to terminal for now
 int printf(const char *s);
+void unitTest(const int errorNum,const char* errorMessage, const int bool);
