@@ -18,7 +18,7 @@ enum COM_PORT {
  * Return 0 otherwise
  */
 int serial_driver_init();
-void write_serial(enum COM_PORT port, const string* s);
+void write_serial(enum COM_PORT port, const char *s);
 
 /* TODO implement this */
-int read_serial(enum COM_PORT port, string *dest);
+int read_serial(enum COM_PORT port, char *dest);

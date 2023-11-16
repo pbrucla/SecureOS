@@ -27,23 +27,24 @@ static int init_serial_port(enum COM_PORT port)
     if (inb(port + 0) != 0xAE)
       return 0;
 
-    // Otherwise, serial is operational, therefore disable loopback mode
+    // // Otherwise, serial is operational, therefore disable loopback mode
     outb(port + 4, 0x0F);
     return 1;
 }
 
-void write_serial(enum COM_PORT port, const string *s)
+void write_serial(enum COM_PORT port, const char *s)
 {
-    for (size_t i = 0; i < s->len; ++i)
-        putc_serial(port, s->data[i]);
+    for (size_t i = 0; s[i] != '\0'; ++i)
+        putc_serial(port, s[i]);
 }
 
-int read_serial(enum COM_PORT port, string *dest)
+int read_serial(enum COM_PORT port, char *dest)
 {
     return 0;
 }
 
-inline static int transmit_buffer_empty(enum COM_PORT port) { 
+inline static int transmit_buffer_empty(enum COM_PORT port)
+{
     /* Read from transmit buffer empty register */
     return inb(port + 5) & 0x20;
 }
@@ -51,7 +52,8 @@ inline static int transmit_buffer_empty(enum COM_PORT port) {
 inline static int putc_serial(enum COM_PORT port, char c)
 {
     /* Wait until transmit buffer is empty */
-    while (!transmit_buffer_empty(port));
+    while (!transmit_buffer_empty(port))
+        ;
 
     /* Write character to output buffer */
     outb(port + 0, c);

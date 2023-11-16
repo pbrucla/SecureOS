@@ -11,17 +11,15 @@
 void main()
 {
     init_drivers();
-
-    string s;
-    s.data = "Hello From SecureOS!";
-    s.len = 20;
-    write_serial(COM1, &s);
-
     terminal_clear();
     terminal_update_cursor();
     init_idt();
     asm volatile("int $0x3");
     asm volatile("int $0x4");
+
+    write_serial(COM1, "Hello From SecureOS!");
+    // printf(s.data);
+
     // init_paging();
     // string s;
     // s.data =
