@@ -51,6 +51,9 @@ image: boot kernel
 run: default
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
+gdb: default
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image  -s -S & gdb -x "~/.config/gefremote" build/kernel.elf
+
 dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
