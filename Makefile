@@ -52,7 +52,8 @@ run: default
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 gdb: default
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image  -s -S & gdb -x "~/.config/gefremote" build/kernel.elf
+	# Need to have GEF installed for this to work
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -s -S & gdb -ex "gef-remote --qemu-user localhost 1234" build/kernel.elf
 
 dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
