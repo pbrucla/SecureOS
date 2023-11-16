@@ -77,6 +77,7 @@ void terminal_put64(unsigned long long n)
             temp += '0';
         else
             temp += 'A' - 10;
+
         terminal_putchar(temp);
     }
 }
@@ -93,27 +94,27 @@ void terminal_enable_cursor()
 {
     uint8_t cursor_start = 0;
     uint8_t cursor_end = 15;
-    outb(0x0A, 0x3D4);
-    outb((inb(0x3D5) & 0xC0) | cursor_start, 0x3D5);
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
 
-    outb(0x0B, 0x3D4);
-    outb((inb(0x3D5) & 0xE0) | cursor_end, 0x3D5);
+    outb(0x3D4, 0x0B);
+    outb(0x3D5, (inb(0x3D5) & 0xE0) | cursor_end);
 }
 
 void terminal_disable_cursor()
 {
-    outb(0x0A, 0x3D4);
-    outb(0x20, 0x3D5);
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, 0x20);
     return;
 }
 
 void terminal_update_cursor()
 {
     uint16_t pos = cursor_row * VGA_WIDTH + cursor_col;
-    outb(0x0F, 0x3D4);
-    outb((uint8_t)(pos & 0xFF), 0x3D5);
-    outb(0x0E, 0x3D4);
-    outb((uint8_t)((pos >> 8) & 0xFF), 0x3D5);
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t)(pos & 0xFF));
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
 void terminal_move_cursor(uint8_t row, uint8_t col)

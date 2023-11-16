@@ -47,7 +47,7 @@ __attribute__((noinline)) static void actualirq1Handler(void)
 
         // send eoi to the master PIC
         // this is needed in the PIC remapping, don't question it
-        outbb(0x20, 0x20);
+        outb(0x20, 0x20);
         __asm__ volatile("cli");
     }
 }
@@ -78,28 +78,28 @@ void setup_pic(void)
     unsigned char mask2 = inb(0xa1);
 
     // send initialization command (0x11) to both PICs
-    // PIC will now wait for 4 outbb to their data port
-    outbb(0x20, 0x11);
+    // PIC will now wait for 4 outb to their data port
+    outb(0x20, 0x11);
     io_wait();
-    outbb(0xa0, 0x11);
+    outb(0xa0, 0x11);
     io_wait();
 
     // remap PIC1 to 0x20-0x27 and PIC2 to 0x28-0x30
-    outbb(0x21, 0x20);
+    outb(0x21, 0x20);
     io_wait();
-    outbb(0xa1, 0x28);
+    outb(0xa1, 0x28);
     io_wait();
 
     // tell PIC1 and PIC2 about each other
-    outbb(0x21, 1 << 2); // PIC2 is at IRQ2
+    outb(0x21, 1 << 2); // PIC2 is at IRQ2
     io_wait();
-    outbb(0xa1, 2); // PIC1 cascade identify (idk what that means)
+    outb(0xa1, 2); // PIC1 cascade identify (idk what that means)
     io_wait();
 
     // tell PICs they are in 32-bit mode
-    outbb(0x21, 1);
+    outb(0x21, 1);
     io_wait();
-    outbb(0xa1, 1);
+    outb(0xa1, 1);
     io_wait();
 
     // restore previous irq masks (0xb8 for PIC1 and 0x8e for PIC2)
@@ -111,9 +111,9 @@ void setup_pic(void)
     // (which will enable them in hw)
     mask1 = 0xff ^ (1 << 1 | 1 << 2);
     mask2 = 0xff;
-    outbb(0x21, mask1);
+    outb(0x21, mask1);
     io_wait();
-    outbb(0xa1, mask2);
+    outb(0xa1, mask2);
     io_wait();
 }
 

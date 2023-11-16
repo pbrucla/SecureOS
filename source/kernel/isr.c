@@ -53,10 +53,10 @@ void irq_handler(registers_t *frame)
     uint32_t irq_no = int_no - IRQ_OFFSET;
     if (irq_no >= 8) {
         // reset slave
-        outbb(0xA0, 0x20);
+        outb(0xA0, 0x20);
     }
     // reset master
-    outbb(0x20, 0x20);
+    outb(0x20, 0x20);
     if (interrupt_handlers[int_no] != 0) {
         isr_t handler = interrupt_handlers[int_no];
         handler(frame);
