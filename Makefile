@@ -9,9 +9,11 @@ OBJCOPY=$(PREFIX)-objcopy
 
 BUILD_DIR=build
 SRC_DIR=source
+CONF_DIR=config
 KERNEL_DIR=$(SRC_DIR)/kernel
 BOOT_DIR=$(SRC_DIR)/boot
 LIBC_DIR=$(SRC_DIR)/libc
+GEF_CONFIG=$(CONF_DIR)/gefremote
 
 INCLUDES=$(KERNEL_DIR)/include
 LIBC=$(LIBC_DIR)/include
@@ -52,7 +54,7 @@ run: default
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
 
 gdb: default
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image  -s -S & gdb -x "~/.config/gefremote" build/kernel.elf
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image  -s -S & gdb -x $(GEF_CONFIG) build/kernel.elf
 
 dockerun:
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
