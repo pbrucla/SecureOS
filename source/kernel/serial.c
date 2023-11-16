@@ -2,6 +2,7 @@
 #include "io.h"
 
 static int init_serial_port(enum COM_PORT port);
+static char readc_serial(enum COM_PORT port);
 inline static int putc_serial(enum COM_PORT port, char c);
 
 int serial_driver_init()
@@ -38,7 +39,21 @@ void write_serial(enum COM_PORT port, const char *s)
         putc_serial(port, s[i]);
 }
 
-int read_serial(enum COM_PORT port, char *dest)
+inline bool read_available(enum COM_PORT port)
+{
+    /* Data Ready bit */
+    return inb(port + 5) & 1;
+}
+
+static char readc_serial(enum COM_PORT port)
+{
+    while (!read_available(port))
+        ;
+
+    return inb(port);
+}
+
+int read_serial(enum COM_PORT port, int nbytes, char *dest)
 {
     return 0;
 }

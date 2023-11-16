@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "string.h"
 
 enum COM_PORT {
@@ -20,5 +22,11 @@ enum COM_PORT {
 int serial_driver_init();
 void write_serial(enum COM_PORT port, const char *s);
 
-/* TODO implement this */
-int read_serial(enum COM_PORT port, char *dest);
+
+/* Blocking read, reads nbytes */
+int read_serial(enum COM_PORT port, int nbytes, char *dest);
+
+/* True if there is pending data to be read, False otherwise*/
+inline bool read_available(enum COM_PORT port);
+
+/* TODO implement non-blocking read api */

@@ -19,6 +19,8 @@ void main()
     asm volatile("int $0x4");
 
     write_serial(COM1, "Hello From SecureOS!");
+    char c = readc_serial(COM1);
+    printf("%x", c);
     // printf(s.data);
 
     // init_paging();
