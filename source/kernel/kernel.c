@@ -11,10 +11,11 @@ void main()
 {
     init_drivers();
     terminal_clear();
+    terminal_update_cursor();
     init_idt();
     asm volatile("int $0x3");
-    init_paging();
-    terminal_update_cursor();
+    asm volatile("int $0x4");
+    // init_paging();
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
