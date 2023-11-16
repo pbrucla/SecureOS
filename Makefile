@@ -35,7 +35,7 @@ OBJ_FILES=$(patsubst $(LIBC_DIR)/%.c,$(BUILD_DIR)/%.o,$(LIBC_SRC)) \
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.asm
-	$(ASM) $< -f elf32 -o $@
+	$(ASM) -i $(INCLUDES) $< -f elf32 -o $@
 $(BUILD_DIR)/%.o: $(LIBC_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 

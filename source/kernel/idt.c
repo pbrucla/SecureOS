@@ -1,5 +1,7 @@
 #include "idt.h"
+#include "io.h"
 #include "isr.h"
+#include "terminal_driver.h"
 #include <stdint.h>
 
 #define NUM_IDTS 256
@@ -17,31 +19,38 @@ __attribute__((aligned(0x10))) static idt_entry_t idt[NUM_IDTS];
 // define the idtr
 static idtr_t idtr;
 
-static uint64_t has_triggered = 0;
+static uint32_t has_triggered = 0;
+static uint32_t hits = 0;
+static uint32_t oopsie_woopsie = 0;
+
+uint32_t get_hits(void) { return oopsie_woopsie; }
 
 // we no-inline because I don't want it inlined :lemonthink:
 // also i want the actual isr to only have save register, call, then iret
-// __attribute__((noinline)) static void actual_exception_handler(void)
-// {
-//     if (terminal_driver_loaded() && !has_triggered) {
-//         printf("Hello");
-//         has_triggered = 1;
-//     }
-// }
+__attribute__((noinline)) static void actual_exception_handler(void)
+{
+    oopsie_woopsie++;
+}
 
-// we put the actual handler in a different function because
-// we want to clean up the stack before we iret
-// idt_handler_t interrupt_handler(registers_t* frame)
-// {
-//     terminal_putchar(frame->int_no + '0');
-//     terminal_putchar('\n');
-// }
-// interrupts {8, 10-14} push error codes on stack
-// Note: tested it. Doesn't fucking work. Ima strangle Richard Stallman.
-// idt_handler_t exception_handler(registers_t* frame, uint32_t error_code) {
-//     printf("error code pushed");
-//     terminal_putchar('\n');
-// }
+// this currently will triple-fault on pressing a keyboard
+__attribute__((noinline)) static void actualirq1Handler(void)
+{
+    // seems to triple fault before reaching here, idk pls can we get serial
+    // driver
+    hits++;
+    if (terminal_driver_loaded() && !has_triggered) {
+        terminal_putchar('U');
+        terminal_update_cursor();
+        // inb(0x60) is the port containing the key pressed
+        terminal_put64(inb(0x60));
+        terminal_update_cursor();
+
+        // send eoi to the master PIC
+        // this is needed in the PIC remapping, don't question it
+        outbb(0x20, 0x20);
+        __asm__ volatile("cli");
+    }
+}
 
 void idt_set_entry(int idx, uint32_t handler_ptr, uint16_t code_selector,
                    uint8_t attributes)
@@ -53,6 +62,59 @@ void idt_set_entry(int idx, uint32_t handler_ptr, uint16_t code_selector,
                              .reserved = 0,
                              .attributes = attributes,
                              .isr_high = upper};
+}
+
+void setup_pic(void)
+{
+    // for some context:
+    // PIC1 is the "master" PIC which can cascade signals to PIC2 via interrupt
+    // 2 port 0x20 -> PIC1 command port 0x21 -> PIC1 data port 0xa0 -> PIC2
+    // command port 0xa1 -> PIC2 data
+
+    // data ports will have the irq masks when read
+    // note that the 8-bit mask has bit set to 1 for disabled interrupts
+    // and 0 for enabled interrupts
+    unsigned char mask1 = inb(0x21);
+    unsigned char mask2 = inb(0xa1);
+
+    // send initialization command (0x11) to both PICs
+    // PIC will now wait for 4 outbb to their data port
+    outbb(0x20, 0x11);
+    io_wait();
+    outbb(0xa0, 0x11);
+    io_wait();
+
+    // remap PIC1 to 0x20-0x27 and PIC2 to 0x28-0x30
+    outbb(0x21, 0x20);
+    io_wait();
+    outbb(0xa1, 0x28);
+    io_wait();
+
+    // tell PIC1 and PIC2 about each other
+    outbb(0x21, 1 << 2); // PIC2 is at IRQ2
+    io_wait();
+    outbb(0xa1, 2); // PIC1 cascade identify (idk what that means)
+    io_wait();
+
+    // tell PICs they are in 32-bit mode
+    outbb(0x21, 1);
+    io_wait();
+    outbb(0xa1, 1);
+    io_wait();
+
+    // restore previous irq masks (0xb8 for PIC1 and 0x8e for PIC2)
+    // for now, i only want 1 interrupt (the keyboard interrupt) so i will mask
+    // off everything else keyboard interrupt is the 1 << 1, cascade to PIC2
+    // signal is the 1 << 2
+    //
+    // remember that ^ toggles bits, so bits 1 and 2 will be toggled to 0
+    // (which will enable them in hw)
+    mask1 = 0xff ^ (1 << 1 | 1 << 2);
+    mask2 = 0xff;
+    outbb(0x21, mask1);
+    io_wait();
+    outbb(0xa1, mask2);
+    io_wait();
 }
 
 void init_idt(void)
@@ -90,5 +152,26 @@ void init_idt(void)
     idt_set_entry(29, (uint32_t)isr29, IDT_CODE_SEL, IDT_ATTR);
     idt_set_entry(30, (uint32_t)isr30, IDT_CODE_SEL, IDT_ATTR);
     idt_set_entry(31, (uint32_t)isr31, IDT_CODE_SEL, IDT_ATTR);
+
+    setup_pic();
+    idt_set_entry(32, (uint32_t)irq0, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(33, (uint32_t)irq1, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(34, (uint32_t)irq2, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(35, (uint32_t)irq3, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(36, (uint32_t)irq4, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(37, (uint32_t)irq5, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(38, (uint32_t)irq6, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(39, (uint32_t)irq7, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(40, (uint32_t)irq8, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(41, (uint32_t)irq9, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(42, (uint32_t)irq10, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(43, (uint32_t)irq11, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(44, (uint32_t)irq12, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(45, (uint32_t)irq13, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(46, (uint32_t)irq14, IDT_CODE_SEL, IDT_ATTR);
+    idt_set_entry(47, (uint32_t)irq15, IDT_CODE_SEL, IDT_ATTR);
+
+    init_isr();
+
     idt_flush(idtr);
 }
