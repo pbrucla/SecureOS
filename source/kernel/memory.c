@@ -93,8 +93,8 @@ struct kalloc_chunk {
 #define clear_inuse(p)                                                         \
     (((kalloc_chunk *)((char *)(p) + chunksize(p)))->size &= ~PREV_INUSE)
 #define set_prevsize(p)                                                        \
-    (*(size_t *)((char *)p + chunksize(p) - sizeof(size_t)) = chunksize(p))
-#define get_prevsize(p) (*(size_t *)((char *)p - sizeof(size_t)))
+    (*(size_t *)((char *)(p) + chunksize(p) - sizeof(size_t)) = chunksize(p))
+#define get_prevsize(p) (*(size_t *)((char *)(p) - sizeof(size_t)))
 
 // do KASLR later (tm)
 // todo: add __kfree_hook() and __kalloc_hook()
