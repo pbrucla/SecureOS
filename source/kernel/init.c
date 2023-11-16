@@ -1,5 +1,5 @@
 #include "init.h"
-#include "drivers/serial.h"
+#include "serial.h"
 #include "terminal_driver.h"
 
 void init_drivers()

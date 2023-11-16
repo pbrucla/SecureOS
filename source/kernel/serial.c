@@ -1,7 +1,8 @@
 #include "serial.h"
+#include "io.h"
 
-static int init_serial_port(COM_PORT port);
-inline static int putc_serial(COM_PORT port, char c);
+static int init_serial_port(enum COM_PORT port);
+inline static int putc_serial(enum COM_PORT port, char c);
 
 int serial_driver_init()
 {
@@ -10,7 +11,7 @@ int serial_driver_init()
     /* TODO initialize all COM ports */
 }
 
-static int init_serial_port(COM_PORT port)
+static int init_serial_port(enum COM_PORT port)
 {
     outb(port + 1, 0x00); // Disable all interrupts
     outb(port + 3, 0x80); // Enable DLAB (set baud rate divisor)
@@ -31,26 +32,26 @@ static int init_serial_port(COM_PORT port)
     return 1;
 }
 
-void write_serial(COM_PORT port, const string *s)
+void write_serial(enum COM_PORT port, const string *s)
 {
     for (size_t i = 0; i < s->len; ++i)
         putc_serial(port, s->data[i]);
 }
 
-int read_serial(COM_PORT port, string *dest)
+int read_serial(enum COM_PORT port, string *dest)
 {
     return 0;
 }
 
-inline static int transmit_buffer_empty(COM_PORT port) { 
+inline static int transmit_buffer_empty(enum COM_PORT port) { 
     /* Read from transmit buffer empty register */
     return inb(port + 5) & 0x20;
 }
 
-inline static int putc_serial(COM_PORT port, char c)
+inline static int putc_serial(enum COM_PORT port, char c)
 {
     /* Wait until transmit buffer is empty */
-    while (!is_transmit_empty());
+    while (!transmit_buffer_empty(port));
 
     /* Write character to output buffer */
     outb(port + 0, c);

@@ -2,6 +2,7 @@
 #include "init.h"
 #include "io.h"
 #include "memory.h"
+#include "serial.h"
 #include "string.h"
 #include "terminal_driver.h"
 #include "timer.h"
@@ -10,6 +11,12 @@
 void main()
 {
     init_drivers();
+
+    string s;
+    s.data = "Hello From SecureOS!";
+    s.len = 20;
+    write_serial(COM1, &s);
+
     terminal_clear();
     terminal_update_cursor();
     init_idt();

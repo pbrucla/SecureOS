@@ -49,10 +49,10 @@ image: boot kernel
 	$(DD) if=/dev/zero of=$(BUILD_DIR)/os_image seek=1 obs=1024 count=0 conv=notrunc
 
 run: default
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio
 
 dockerun:
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio
 
 check:
 	@grep -RE $$'\r' source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0
