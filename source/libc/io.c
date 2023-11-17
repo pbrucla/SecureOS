@@ -39,3 +39,26 @@ int printch(char c)
     terminal_putchar(c);
     terminal_update_cursor();
 }
+
+void unitTest(const int errorNum,const char* errorMessage, const int bool){
+    terminal_put64(errorNum);
+    terminal_putchar(':');
+    terminal_putchar(' ');
+    printf(errorMessage);
+    
+    if(bool==1)  asm("hlt");
+}
+
+#define getReg(a) (asm(a))
+void printRegs(){
+    printf("test");
+    int i;
+    char regList[7] = {"eax", "ebx", "ecx", "edx", "esi", "edi", "ebp"};
+    for(i = 0; i < 7; ++i){
+        register int reg getReg(regList[i]);
+        printf(regList[i]);
+        printf(": ");
+        terminal_put64(i);
+        printf("\n");
+    }
+}

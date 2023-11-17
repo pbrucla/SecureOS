@@ -7,3 +7,5 @@ void io_wait();
 // printf attached to terminal for now
 int printf(const char *s, ...);
 int printch(char c);
+void unitTest(const int errorNum,const char* errorMessage, const int bool);
+void PrintRegs();

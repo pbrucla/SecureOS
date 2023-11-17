@@ -12,6 +12,7 @@ void main()
 {
     init_drivers();
     terminal_clear();
+<<<<<<< Updated upstream
     init_paging();
     terminal_update_cursor();
     init_idt();
@@ -22,6 +23,13 @@ void main()
     // printf(s.data);
 
     // init_paging();
+=======
+    init_idt();
+    asm volatile("int $0x3");
+    //init_paging();
+    terminal_update_cursor();
+    printRegs();
+>>>>>>> Stashed changes
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
