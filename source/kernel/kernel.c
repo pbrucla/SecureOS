@@ -12,24 +12,15 @@ void main()
 {
     init_drivers();
     terminal_clear();
-<<<<<<< Updated upstream
     init_paging();
     terminal_update_cursor();
     init_idt();
+    printRegs();
     asm volatile("int $0x3");
     asm volatile("int $0x4");
 
-    write_serial(COM1, "Hello From SecureOS!");
+    //write_serial(COM1, "Hello From SecureOS!");
     // printf(s.data);
-
-    // init_paging();
-=======
-    init_idt();
-    asm volatile("int $0x3");
-    //init_paging();
-    terminal_update_cursor();
-    printRegs();
->>>>>>> Stashed changes
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
