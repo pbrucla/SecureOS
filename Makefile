@@ -35,7 +35,7 @@ OBJ_FILES=$(patsubst $(LIBC_DIR)/%.c,$(BUILD_DIR)/%.o,$(LIBC_SRC)) \
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 $(BUILD_DIR)/%.o: $(KERNEL_DIR)/%.asm
-	$(ASM) $< -f elf32 -o $@
+	$(ASM) -i $(INCLUDES) $< -f elf32 -o $@
 $(BUILD_DIR)/%.o: $(LIBC_DIR)/%.c
 	$(GCC) $(GCC_FLAGS) -c $< -o $@
 
@@ -49,10 +49,14 @@ image: boot kernel
 	$(DD) if=/dev/zero of=$(BUILD_DIR)/os_image seek=1 obs=1024 count=0 conv=notrunc
 
 run: default
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio
+
+gdb: default
+	# Need to have GEF installed for this to work
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -s -S & gdb -ex "gef-remote --qemu-user localhost 1234" build/kernel.elf
 
 dockerun:
-	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio
 
 check:
 	@grep -RE $$'\r' source/ && echo "Found carriage returns in source files. Please run 'make format' to fix them." && exit 1 || exit 0

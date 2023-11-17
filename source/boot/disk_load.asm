@@ -84,7 +84,7 @@ disk_load:
         jnz .stop
         inc esi
         loop .loop
-    .stop
+    .stop:
     ret
     
 

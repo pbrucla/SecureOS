@@ -2,6 +2,7 @@
 #include "init.h"
 #include "io.h"
 #include "memory.h"
+#include "serial.h"
 #include "string.h"
 #include "terminal_driver.h"
 #include "timer.h"
@@ -11,10 +12,16 @@ void main()
 {
     init_drivers();
     terminal_clear();
-    init_idt();
-    asm volatile("int $0x3");
     init_paging();
     terminal_update_cursor();
+    init_idt();
+    asm volatile("int $0x3");
+    asm volatile("int $0x4");
+
+    write_serial(COM1, "Hello From SecureOS!");
+    // printf(s.data);
+
+    // init_paging();
     // string s;
     // s.data =
     // "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLL"
