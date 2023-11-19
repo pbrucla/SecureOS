@@ -21,6 +21,8 @@ void breakpoint(registers_t *frame) { printf("breakpoint\n"); }
 
 void overflow(registers_t *frame) { printf("overflow trap\n"); }
 
+void pagefault(registers_t *frame) { printf("page fault\n"); }
+
 void init_isr()
 {
     for (int i = 0; i < 256; i++)
@@ -31,8 +33,12 @@ void init_isr()
     register_interrupt_handler(3, &breakpoint);
     register_interrupt_handler(4, &overflow);
 
+    register_interrupt_handler(14, &pagefault);
+
     // irq handlers
     register_interrupt_handler(33, &keyboard_irq);
+
+    printf("%x\n", &keyboard_irq);
 
     // handler initializations
     keyboard_init();

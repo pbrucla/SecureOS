@@ -1,7 +1,7 @@
 #include "memory.h"
 #include "terminal_driver.h"
+#include "io.h"
 #include <stdint.h>
-#include <stdlib.h>
 
 uint32_t l2_page_table[1024] __attribute__((aligned(4096)));
 
@@ -266,5 +266,6 @@ void print_chunks()
 void init_paging()
 {
     // unmap lower page
+    printf("%x\n", l2_page_table[0]);
     l2_page_table[0] = 0;
 }
