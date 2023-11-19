@@ -1,4 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "idt.h"
 
-unsigned long long get_cpu_time();
+void timer_init(uint32_t hz);
+void timer_irq(registers_t *frame);

@@ -266,6 +266,5 @@ void print_chunks()
 void init_paging()
 {
     // unmap lower page
-    printf("%x\n", l2_page_table[0]);
     l2_page_table[0] = 0;
 }

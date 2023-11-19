@@ -3,6 +3,7 @@
 #include "io.h"
 #include "keyboard_driver.h"
 #include "terminal_driver.h"
+#include "timer.h"
 
 isr_t interrupt_handlers[256];
 
@@ -35,13 +36,11 @@ void init_isr()
 
     register_interrupt_handler(14, &pagefault);
 
-    // irq handlers
-    register_interrupt_handler(33, &keyboard_irq);
-
-    printf("%x\n", &keyboard_irq);
-
-    // handler initializations
+    // irq handlers IRQ# + 32
+    timer_init(100);
+    register_interrupt_handler(32, &timer_irq);
     keyboard_init();
+    register_interrupt_handler(33, &keyboard_irq);
 }
 
 void isr_handler(registers_t *frame)

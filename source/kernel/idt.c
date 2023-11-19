@@ -76,7 +76,7 @@ void setup_pic(void)
     //
     // remember that ^ toggles bits, so bits 1 and 2 will be toggled to 0
     // (which will enable them in hw)
-    mask1 = 0xff ^ (1 << 1 | 1 << 2);
+    mask1 = 0xff ^ (1 << 0 | 1 << 1 | 1 << 2);
     mask2 = 0xff;
     outb(0x21, mask1);
     io_wait();
