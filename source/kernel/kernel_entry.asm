@@ -6,7 +6,7 @@ global kernel_entry
 
 ; flags for a megapage
 MEGAPAGE_FLAGS equ (1 << 7) | (1 << 1) | (1 << 0)
-L2_PAGE_BASE equ l2_page_table - (1 << 31)
+L2_PAGE_BASE equ l2_page_table - (0x80100000)
 
 kernel_entry:
 ; enable page size extensions

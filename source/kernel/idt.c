@@ -19,39 +19,6 @@ __attribute__((aligned(0x10))) static idt_entry_t idt[NUM_IDTS];
 // define the idtr
 static idtr_t idtr;
 
-static uint32_t has_triggered = 0;
-static uint32_t hits = 0;
-static uint32_t oopsie_woopsie = 0;
-
-uint32_t get_hits(void) { return oopsie_woopsie; }
-
-// we no-inline because I don't want it inlined :lemonthink:
-// also i want the actual isr to only have save register, call, then iret
-__attribute__((noinline)) static void actual_exception_handler(void)
-{
-    oopsie_woopsie++;
-}
-
-// this currently will triple-fault on pressing a keyboard
-__attribute__((noinline)) static void actualirq1Handler(void)
-{
-    // seems to triple fault before reaching here, idk pls can we get serial
-    // driver
-    hits++;
-    if (terminal_driver_loaded() && !has_triggered) {
-        terminal_putchar('U');
-        terminal_update_cursor();
-        // inb(0x60) is the port containing the key pressed
-        terminal_put64(inb(0x60));
-        terminal_update_cursor();
-
-        // send eoi to the master PIC
-        // this is needed in the PIC remapping, don't question it
-        outb(0x20, 0x20);
-        __asm__ volatile("cli");
-    }
-}
-
 void idt_set_entry(int idx, uint32_t handler_ptr, uint16_t code_selector,
                    uint8_t attributes)
 {
@@ -109,7 +76,7 @@ void setup_pic(void)
     //
     // remember that ^ toggles bits, so bits 1 and 2 will be toggled to 0
     // (which will enable them in hw)
-    mask1 = 0xff ^ (1 << 1 | 1 << 2);
+    mask1 = 0xff ^ (1 << 0 | 1 << 1 | 1 << 2);
     mask2 = 0xff;
     outb(0x21, mask1);
     io_wait();

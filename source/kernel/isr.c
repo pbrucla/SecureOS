@@ -3,6 +3,7 @@
 #include "io.h"
 #include "keyboard_driver.h"
 #include "terminal_driver.h"
+#include "timer.h"
 
 isr_t interrupt_handlers[256];
 
@@ -21,6 +22,8 @@ void breakpoint(registers_t *frame) { printf("breakpoint\n"); }
 
 void overflow(registers_t *frame) { printf("overflow trap\n"); }
 
+void pagefault(registers_t *frame) { printf("page fault\n"); }
+
 void init_isr()
 {
     for (int i = 0; i < 256; i++)
@@ -31,11 +34,13 @@ void init_isr()
     register_interrupt_handler(3, &breakpoint);
     register_interrupt_handler(4, &overflow);
 
-    // irq handlers
-    register_interrupt_handler(33, &keyboard_irq);
+    register_interrupt_handler(14, &pagefault);
 
-    // handler initializations
+    // irq handlers IRQ# + 32
+    timer_init(100);
+    register_interrupt_handler(32, &timer_irq);
     keyboard_init();
+    register_interrupt_handler(33, &keyboard_irq);
 }
 
 void isr_handler(registers_t *frame)
