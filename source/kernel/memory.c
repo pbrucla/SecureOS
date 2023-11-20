@@ -268,5 +268,4 @@ void init_paging()
 {
     // unmap lower page
     l2_page_table[0] = 0;
-    write_serial(COM1, "init_paging\n");
 }
