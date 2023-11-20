@@ -7,15 +7,14 @@
 #include "terminal_driver.h"
 #include "timer.h"
 #include <stdint.h>
+#include "gdt.h"
 
 void main()
 {
+    init_gdt();
     init_drivers();
     terminal_clear();
     terminal_update_cursor();
     init_idt();
     init_paging();
-    printf("Hello");
-
-    write_serial(COM1, "Hello From SecureOS!");
 }

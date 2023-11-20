@@ -51,6 +51,12 @@ image: boot kernel
 run: default
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio
 
+monitor: default
+	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -serial stdio -monitor unix:qemu-monitor-socket,server,nowait
+
+connect:
+	socat -,echo=0,icanon=0 unix-connect:qemu-monitor-socket
+
 gdb: default
 	# Need to have GEF installed for this to work
 	$(QEMU) -drive format=raw,file=$(BUILD_DIR)/os_image -s -S & gdb -ex "gef-remote --qemu-user localhost 1234" build/kernel.elf
