@@ -12,7 +12,7 @@ void main()
 {
     init_drivers();
     terminal_clear();
-    init_paging();
+    //init_paging();
     terminal_update_cursor();
     init_idt();
     printRegs();

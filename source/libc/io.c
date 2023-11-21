@@ -85,4 +85,9 @@ void printRegs(){
     printf("ebp: ");
     terminal_put64(i);
     printf("\n");
+    
+    asm("mov %%esp, %0" : "+g" (i)::);
+    printf("esp: ");
+    terminal_put64(i);
+    printf("\n");
 }
