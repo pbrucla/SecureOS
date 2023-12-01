@@ -17,4 +17,5 @@ void main()
     terminal_update_cursor();
     init_idt();
     init_paging();
+    printRegs();
 }

@@ -39,3 +39,55 @@ int printch(char c)
     terminal_putchar(c);
     terminal_update_cursor();
 }
+
+void unitTest(const int errorNum,const char* errorMessage, const int bool){
+    terminal_put64(errorNum);
+    terminal_putchar(':');
+    terminal_putchar(' ');
+    printf(errorMessage);
+    
+    if(bool==1)  asm("hlt");
+}
+
+void printRegs(){
+    int i;
+    asm("mov %%eax, %0" : "+g" (i)::);
+    printf("eax: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%ebx, %0" : "+g" (i)::);
+    printf("ebx: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%ecx, %0" : "+g" (i)::);
+    printf("ecx: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%edx, %0" : "+g" (i)::);
+    printf("edx: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%esi, %0" : "+g" (i)::);
+    printf("esi: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%edi, %0" : "+g" (i)::);
+    printf("edi: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%ebp, %0" : "+g" (i)::);
+    printf("ebp: ");
+    terminal_put64(i);
+    printf("\n");
+    
+    asm("mov %%esp, %0" : "+g" (i)::);
+    printf("esp: ");
+    terminal_put64(i);
+    printf("\n");
+}
